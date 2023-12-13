@@ -2,8 +2,9 @@ from flask import Flask
 from flask import request
 import requests
 import os
+from flask import render_template
 import json
-from google.cloud import secretmanager_v1
+from google.cloud import secretmanager
 app = Flask(__name__)
 
 def access_secret_version(secret_id, version_id="latest"):
@@ -11,7 +12,7 @@ def access_secret_version(secret_id, version_id="latest"):
     client = secretmanager.SecretManagerServiceClient()
 
     # Build the resource name of the secret version.
-    name = f"projects/fluent-protocol-400911/secrets/{secret_id}/versions/{version_id}"
+    name = f"projects/41848127270/secrets/{secret_id}/versions/{version_id}"
 
     # Access the secret version.
     response = client.access_secret_version(name=name)
