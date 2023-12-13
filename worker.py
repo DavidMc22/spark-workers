@@ -6,18 +6,18 @@ import json
 from google.cloud import secretmanager_v1
 app = Flask(__name__)
 
-def get_api_key() -> str:
-    
-    #secret = os.environ.get("COMPUTE_API_KEY")
-    project_id = "fluent-protocol-400911"
-    secret_id = "compute-api-key" 
-    
-    client = secretmanager_v1.SecretManagerServiceClient()
-    
-    name = f"projects/{project_id}/secrets/{secret_id}/versions/latest"
+def access_secret_version(secret_id, version_id="latest"):
+    # Create the Secret Manager client.
+    client = secretmanager.SecretManagerServiceClient()
+
+    # Build the resource name of the secret version.
+    name = f"projects/fluent-protocol-400911/secrets/{secret_id}/versions/{version_id}"
+
+    # Access the secret version.
     response = client.access_secret_version(name=name)
-    
-    return response.payload.data.decode("UTF-8")
+
+    # Return the decoded payload.
+    return response.payload.data.decode('UTF-8')
     #if secret:
     #    return secret
     #else:
@@ -39,7 +39,7 @@ def add():
   if request.method=='GET':
     return "Use post to add" # replace with form template
   else:
-    token="ya29.a0AfB_byDPRsFkwyRiBOi-WIRxIEuZ_0853HMH6W2SLLB3b3XBGb-JxZMiTfKCnqVG8IC97h_a_OBErr5o9MZoT0RLK97esd1DtuiJ0Xal687rHo-VI6xPAWs-oSezkZl_5EbvmTrTp-JaGBvFeo0bfd5WnQ3oxOFVeL2LAkXL9EZ4Kc1cS6hEMP14kIqlo_dSYtfMiXgvhlvt0We98ecoe9otT7M4u8cKDgLxgxrB6uV-XqiIFgryAJMftDi7hj1hVq_Ro6Uz5QkCVv0Myzq-Kug4kQBMfiywt2NWyePYSkAJsidM7DaFlcve9t9eO4cPss5zbgTl6m5G_pveCl_Cfnf_5dNnEfGch2JM9B5A57Ne3LNm4eC7LJBeS0iAPJjcxbi5YZ05x_uGcs4PfVWcI8gdK5UdXB4aCgYKAYgSARMSFQHGX2MiPBMjhHRfYEhEwaDyu14EUg0422"
+    token=access_secret_version("compute-api-key")
     ret = addWorker(token,request.form['num'])
     return ret
 
