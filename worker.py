@@ -3,6 +3,7 @@ from flask import request
 import requests
 import os
 import json
+from google.cloud import secretmanager_v1
 app = Flask(__name__)
 
 def get_api_key() -> str:
